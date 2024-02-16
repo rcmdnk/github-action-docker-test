@@ -40,8 +40,7 @@ RUN chown -R $USER:$USER /app
 
 # Enable when repository checkout is needed in GitHub Actions
 # https://github.com/actions/checkout/issues/1014#issuecomment-1670098922
-RUN mkdir /__w
-RUN chown -R $USER:$USER /__w
+RUN mkdir -m 777 /__w
 
 USER $USER
 
