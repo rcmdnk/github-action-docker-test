@@ -33,7 +33,6 @@ PATH="/app/.venv/bin:$PATH"
 COPY --from=builder $VIRTUAL_ENV $VIRTUAL_ENV
 
 WORKDIR /app
-COPY entrypoint.sh ./
 
 RUN useradd -r -u 1000 ${USER}
 RUN chown -R $USER:$USER /app
