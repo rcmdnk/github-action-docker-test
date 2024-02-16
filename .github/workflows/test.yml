@@ -54,6 +54,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
+    - uses: actions/checkout@v4
     - uses: ./.github/actions/test
   poetry-test:
     if: ${{ (github.event_name == 'push') || (github.event_name == 'workflow_dispatch' && github.event.inputs.exe_env == 'poetry') }}
