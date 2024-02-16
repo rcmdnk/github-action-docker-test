@@ -66,5 +66,5 @@ jobs:
         python-version: '3.12'
     - run: pip install poetry
     - run: poetry install
-    - run: poetry shell
+    - run: echo "$(dirname $(poetry run which python))" >> $GITHUB_PATH
     - uses: ./.github/actions/test
