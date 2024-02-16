@@ -19,12 +19,12 @@ on:
         default: true
 
 env:
-  EXE_ENV: ${{ inputs.exe_env || 'docker' }}
   USE_BUILDX: ${{ inputs.use_buildx || 'use_buildx' }}
 
 jobs:
   docker-build:
-    if: env.EXE_ENV == 'docker'
+    if: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.exe_env == 'docker') }}
+
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -45,7 +45,7 @@ jobs:
         push: true
         tags: ghcr.io/${{ github.repository }}/test-image:${{ github.sha }}
   docker-test:
-    if: env.EXE_ENV == 'docker'
+    if: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.exe_env == 'docker') }}
     needs: docker-build
     runs-on: ubuntu-latest
     container:
@@ -57,7 +57,7 @@ jobs:
     - uses: actions/checkout@v4
     - uses: ./.github/actions/test
   poetry-test:
-    if: env.EXE_ENV == 'poetry'
+    if: ${{ (github.event_name == 'push') || (github.event_name == 'workflow_dispatch' && github.event.inputs.exe_env == 'poetry') }}
     runs-on: ubuntu-latest
     steps:
     - run: pipx install poetry
