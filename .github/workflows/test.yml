@@ -60,11 +60,11 @@ jobs:
     if: ${{ (github.event_name == 'push') || (github.event_name == 'workflow_dispatch' && github.event.inputs.exe_env == 'poetry') }}
     runs-on: ubuntu-latest
     steps:
-    - run: pipx install poetry
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v4
       with:
         python-version: '3.12'
+    - run: pip install poetry
     - run: poetry install
     - run: poetry shell
     - uses: ./.github/actions/test
