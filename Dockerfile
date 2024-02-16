@@ -33,6 +33,11 @@ COPY entrypoint.sh ./
 RUN useradd -r -u 1000 ${USER}
 RUN chown -R $USER:$USER /app
 
+# For GitHub Actions
+# https://github.com/actions/checkout/issues/1014#issuecomment-1670098922
+RUN mkdir /__w
+RUN chown -R $USER:$USER /__w
+
 USER $USER
 
 ENTRYPOINT ["/entrypoint.sh"]
