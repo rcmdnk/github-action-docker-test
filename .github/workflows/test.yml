@@ -66,4 +66,5 @@ jobs:
       with:
         python-version: '3.12'
     - run: poetry install
+    - run: poetry shell
     - uses: ./.github/actions/test
