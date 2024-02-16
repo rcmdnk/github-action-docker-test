@@ -18,9 +18,6 @@ on:
         required: false
         default: true
 
-env:
-  USE_BUILDX: ${{ inputs.use_buildx || 'use_buildx' }}
-
 jobs:
   docker-build:
     if: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.exe_env == 'docker') }}
@@ -58,16 +55,19 @@ jobs:
       # RUN mkdir -m 1777 /__w in Docker file does not work (?)
       options: --user root
     steps:
-    - uses: ./.github/actions/setup
-      with:
-        exe_env: "docker"
+    - uses: actions/checkout@v4
     - uses: ./.github/actions/test
   poetry-test:
     if: ${{ (github.event_name == 'push') || (github.event_name == 'workflow_dispatch' && github.event.inputs.exe_env == 'poetry') }}
     runs-on: ubuntu-latest
     steps:
-    - uses: ./.github/actions/setup
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v4
       with:
-        exe_env: "poetry"
-        python-version: "3.12"
+        python-version: '3.12'
+    - name: setup poetry
+      run: |
+        pip install poetry
+        poetry install
+        echo "$(dirname $(poetry run which python))" >> $GITHUB_PATH
     - uses: ./.github/actions/test
