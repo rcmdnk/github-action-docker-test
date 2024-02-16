@@ -17,16 +17,10 @@ on:
         type: boolean
         required: false
         default: true
-      image_name:
-        description: "Docker image name"
-        type: string
-        required: false
-        default: "test-image"
 
 env:
   EXE_ENV: ${{ inputs.exe_env || 'docker' }}
   USE_BUILDX: ${{ inputs.use_buildx || 'use_buildx' }}
-  IMAGE_NAME: ${{ inputs.image_name || 'test-image' }}
 
 jobs:
   docker-build:
@@ -49,13 +43,13 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ghcr.io/${{ github.repository }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+        tags: ghcr.io/${{ github.repository }}/test-image:${{ github.sha }}
   docker-test:
     if: env.EXE_ENV == 'docker'
     needs: docker-build
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/${{ github.repository }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+      image: ghcr.io/${{ github.repository }}/test-image:${{ github.sha }}
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -66,13 +60,10 @@ jobs:
     if: env.EXE_ENV == 'poetry'
     runs-on: ubuntu-latest
     steps:
+    - run: pipx install poetry
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v4
       with:
-        python-version: '${{ inputs.python-version }}'
-    - run: pipx install poetry
-    - run: |
-        poetry install
-      with:
-        python-version: 3.12
+        python-version: '3.12'
+    - run: poetry install
     - uses: ./.github/actions/test
