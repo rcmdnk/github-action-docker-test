@@ -56,7 +56,7 @@ jobs:
       # Needed for checkout
       # https://github.com/actions/checkout/issues/1014
       # RUN mkdir -m 1777 /__w in Docker file does not work (?)
-      #options: --user root
+      options: --user root
     steps:
     - uses: actions/checkout@v4
     - uses: ./.github/actions/test

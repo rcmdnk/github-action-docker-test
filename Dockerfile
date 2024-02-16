@@ -38,10 +38,6 @@ COPY entrypoint.sh ./
 RUN useradd -r -u 1000 ${USER}
 RUN chown -R $USER:$USER /app
 
-# Enable when repository checkout is needed in GitHub Actions
-# https://github.com/actions/checkout/issues/1014#issuecomment-1670098922
-RUN mkdir -m 1777 ./__w
-
 USER $USER
 
 ENTRYPOINT ["./entrypoint.sh"]
