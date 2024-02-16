@@ -2,18 +2,23 @@ FROM python:3.12-bookworm as builder
 
 RUN apt-get update
 
-RUN pip install poetry
-
-ENV POETRY_NO_INTERACTION=1 \
-POETRY_VIRTUALENVS_IN_PROJECT=1 \
-POETRY_VIRTUALENVS_CREATE=1 \
-POETRY_CACHE_DIR=/tmp/poetry_cache
+ENV PYTHONDONTWRITEBYTECODE=1 \
+PYTHONUNBUFFERED=1 \
+PIP_NO_CACHE_DIR=off \
+PIP_DISABLE_PIP_VERSION_CHECK=on \
+VIRTUAL_ENV=/app/.venv
 
 WORKDIR /app
 
-COPY pyproject.toml poetry.lock ./
+RUN pip install poetry-plugin-export
 
-RUN poetry install --no-root && rm -rf $POETRY_CACHE_DIR
+COPY pyproject.toml poetry.lock src ./
+
+RUN poetry export --with dev --without-hashes --format=requirements.txt > requirements.txt
+RUN echo "./" >> requirements.txt
+
+RUN python -m venv "$VIRTUAL_ENV"
+RUN . "$VIRTUAL_ENV/bin/activate" && pip install -r requirements.txt
 
 ###############
 
@@ -33,11 +38,11 @@ COPY entrypoint.sh ./
 RUN useradd -r -u 1000 ${USER}
 RUN chown -R $USER:$USER /app
 
-# For GitHub Actions
+# Enable when repository checkout is needed in GitHub Actions
 # https://github.com/actions/checkout/issues/1014#issuecomment-1670098922
-RUN mkdir /__w
-RUN chown -R $USER:$USER /__w
+#RUN mkdir /__w
+#RUN chown -R $USER:$USER /__w
 
 USER $USER
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]

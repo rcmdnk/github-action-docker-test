@@ -1,10 +1,12 @@
 name: test
-description: Run pytest
+description: Run tests
 
 runs:
   using: 'composite'
   steps:
-    -
-      name: Test
+    - name: pytest
       shell: bash
       run: pytest
+    - name: hello
+      shell: bash
+      run: hello

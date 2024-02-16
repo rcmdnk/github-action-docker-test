@@ -157,3 +157,4 @@ cython_debug/
 
 # Others
 .DS_Store
+.requirements.txt
