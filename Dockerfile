@@ -39,5 +39,3 @@ RUN useradd -r -u 1000 ${USER}
 RUN chown -R $USER:$USER /app
 
 USER $USER
-
-ENTRYPOINT ["./entrypoint.sh"]
