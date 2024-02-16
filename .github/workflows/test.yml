@@ -54,7 +54,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
-    - uses: ./.github/actions/test
+    - uses: .github/actions/test
   poetry-test:
     if: ${{ (github.event_name == 'push') || (github.event_name == 'workflow_dispatch' && github.event.inputs.exe_env == 'poetry') }}
     runs-on: ubuntu-latest
@@ -66,4 +66,4 @@ jobs:
     - run: pip install poetry
     - run: poetry install
     - run: echo "$(dirname $(poetry run which python))" >> $GITHUB_PATH
-    - uses: ./.github/actions/test
+    - uses: .github/actions/test
