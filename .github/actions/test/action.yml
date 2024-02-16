@@ -1,0 +1,10 @@
+name: test
+description: Run pytest
+
+runs:
+  using: 'composite'
+  steps:
+    -
+      name: Test
+      shell: bash
+      run: pytest

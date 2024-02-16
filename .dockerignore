@@ -1,0 +1,8 @@
+.dockerignore
+.git
+.github
+.gitignore
+.mypy_cache
+.pytest_cache
+README.md
+tests
