@@ -69,5 +69,5 @@ jobs:
       run: |
         pip install poetry
         poetry install
-        echo "$(poetry show -v 2>/dev/null|grep "Using virtualenv:"|awk '{print $3}')/bin" >> $GITHUB_PATH
+        echo "$(poetry show -v 2>/dev/null|grep 'Using virtualenv:'|awk '{print $3}')/bin" >> $GITHUB_PATH
     - uses: ./.github/actions/test
