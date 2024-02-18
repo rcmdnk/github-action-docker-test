@@ -1,6 +1,4 @@
-FROM python:3.12-bookworm as builder
-
-RUN apt-get update
+FROM python:3.12-slim-bookworm as builder
 
 ENV PIP_NO_CACHE_DIR=1 \
 PIP_DISABLE_PIP_VERSION_CHECK=1 \
@@ -21,9 +19,7 @@ RUN . "$VIRTUAL_ENV/bin/activate" && pip install -r requirements.txt
 ###############
 
 FROM python:3.12-slim-bookworm as runtime
-ARG USER="app"
-
-RUN apt-get update && apt-get clean && rm -rf /var/lib/apt/lists/*
+ARG USER_NAME="appuser"
 
 ENV VIRTUAL_ENV=/app/.venv \
 PATH="/app/.venv/bin:$PATH"
@@ -32,7 +28,7 @@ COPY --from=builder $VIRTUAL_ENV $VIRTUAL_ENV
 
 WORKDIR /app
 
-RUN useradd -r -u 1000 ${USER}
-RUN chown -R $USER:$USER /app
+RUN useradd -r -u 1000 $USER_NAME
+RUN chown -R $USER_NAME:$USER_NAME /app
 
-USER $USER
+USER $USER_NAME
